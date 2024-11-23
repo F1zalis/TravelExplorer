@@ -63,6 +63,9 @@ nav button:hover {
 }
 
 
+
+
+
 .container {
     max-width: 800px;
     margin: 0 auto;
@@ -152,4 +155,16 @@ footer {
     color: white;
     font-size: 0.9em;
     margin-top: 2em;
+    
+}.remove-street-button {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.remove-street-button:hover {
+    background-color: darkred;
 }

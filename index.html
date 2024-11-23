@@ -5,6 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Travel Explorer</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script> 
+    <style>
+        .remove-street-button {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .remove-street-button:hover {
+            background-color: darkred;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .card {
+            background-color: #f9f9f9;
+            padding: 20px;
+            margin: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        
+        #map {
+            width: 100%;
+            height: 400px;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -20,7 +52,9 @@
         <button onclick="showSection('register')">Регистрация</button>
     </nav>
 
-    <section id="home" class="background-image hidden">
+
+    <section id="home" class="container">
+        <div class="background-image"></div>
         <h2>Добро пожаловать в Travel Explorer!</h2>
     </section>
 
@@ -39,10 +73,14 @@
         </div>
     </section>
 
+    
 
     <section id="create" class="container light-background hidden">
         <h2>Создать маршрут</h2>
         <form id="create-route-form">
+            <label for="city">Город:</label>
+            <input type="text" id="city" name="city" placeholder="Введите город" required>
+
             <label for="route-name">Название маршрута:</label>
             <input type="text" id="route-name" name="route-name" placeholder="Введите название маршрута">
 
@@ -58,14 +96,39 @@
                 <option value="urban">Городской</option>
             </select>
 
+            <label for="route-transport">Тип транспорта:</label>
+            <select id="route-transport" name="route-transport">
+                <option value="foot">Пешком</option>
+                <option value="car">На машине</option>
+                <option value="bicycle">На велосипеде</option>
+            </select>
+
             <label for="route-description">Описание маршрута:</label>
             <textarea id="route-description" name="route-description" rows="4" placeholder="Введите описание маршрута"></textarea>
+
+            <label for="route-streets">Улицы для маршрута:</label>
+            <div id="streets-list">
+                <div class="street-item">
+                    <input type="text" name="street-1" placeholder="Улица 1" required>
+                    <button type="button" class="remove-street-button">Удалить</button>
+                </div>
+                <div class="street-item">
+                    <input type="text" name="street-2" placeholder="Улица 2" required>
+                    <button type="button" class="remove-street-button">Удалить</button>
+                </div>
+                <div class="street-item">
+                    <input type="text" name="street-3" placeholder="Улица 3" required>
+                    <button type="button" class="remove-street-button">Удалить</button>
+                </div>
+            </div>
+            <button type="button" id="add-street-button">Добавить улицу</button>
+
+            <div id="map"></div>
 
             <button type="button" onclick="addRoute()">Добавить маршрут</button>
         </form>
     </section>
 
- 
     <section id="register" class="container hidden">
         <h2>Регистрация</h2>
         <form id="register-form">
@@ -82,7 +145,6 @@
         </form>
     </section>
 
- 
     <section id="login" class="container hidden">
         <h2>Вход</h2>
         <form id="login-form" onsubmit="loginUser(event)">
@@ -96,7 +158,6 @@
         </form>
     </section>
 
- 
     <section id="account" class="container hidden">
         <h2>Аккаунт</h2>
         <p><strong>Имя:</strong> <span id="account-name">Не зарегистрирован</span></p>
@@ -117,92 +178,73 @@
             document.getElementById(sectionId).classList.remove('hidden');
         }
 
+        document.getElementById('add-street-button').addEventListener('click', function() {
+            const streetsList = document.getElementById('streets-list');
+            const streetItem = document.createElement('div');
+            streetItem.className = 'street-item';
+
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.name = `street-${streetsList.children.length + 1}`;
+            input.placeholder = `Улица ${streetsList.children.length + 1}`;
+            input.required = true;
+
+            const removeButton = document.createElement('button');
+            removeButton.type = 'button';
+            removeButton.textContent = 'Удалить';
+            removeButton.classList.add('remove-street-button');
+            removeButton.addEventListener('click', function() {
+                streetsList.removeChild(streetItem);
+            });
+
+            streetItem.appendChild(input);
+            streetItem.appendChild(removeButton);
+            streetsList.appendChild(streetItem);
+        });
+
         function registerUser() {
             const username = document.getElementById('register-username').value;
             const email = document.getElementById('register-email').value;
             const password = document.getElementById('register-password').value;
-
-            if (username && email && password) {
-                // Получаем список пользователей
-                const users = JSON.parse(localStorage.getItem('users')) || [];
-                if (users.find(user => user.username === username)) {
-                    alert('Пользователь с таким именем уже существует.');
-                    return;
-                }
-
-           
-                users.push({
-                    username,
-                    email,
-                    password,
-                    subscription: false
-                });
-                localStorage.setItem('users', JSON.stringify(users));
-                alert('Регистрация прошла успешно!');
-                showSection('login');
-            } else {
-                alert('Пожалуйста, заполните все поля.');
-            }
+            console.log('Пользователь зарегистрирован:', { username, email, password });
         }
 
         function loginUser(event) {
             event.preventDefault();
-
             const username = document.getElementById('login-username').value;
             const password = document.getElementById('login-password').value;
-
-            const users = JSON.parse(localStorage.getItem('users')) || [];
-            const user = users.find(user => user.username === username && user.password === password);
-
-            if (user) {
-                localStorage.setItem('currentUser', JSON.stringify(user));
-                updateAccountInfo();
-                showSection('account');
-            } else {
-                alert('Неверные данные для входа.');
-            }
-        }
-
-        function updateAccountInfo() {
-            const user = JSON.parse(localStorage.getItem('currentUser'));
-            if (user) {
-                document.getElementById('account-name').textContent = user.username;
-                document.getElementById('account-email').textContent = user.email;document.getElementById('subscription-status').textContent = user.subscription ? 'Активна' : 'Не активна';
-                document.getElementById('subscribe-button').textContent = user.subscription ? 'Подписка активна' : 'Оформить подписку за 1 рубль в месяц';
-            }
+            console.log('Пользователь вошел:', { username, password });
         }
 
         function subscribe() {
-            const users = JSON.parse(localStorage.getItem('users')) || [];
-            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-
-            if (currentUser) {
-                const userIndex = users.findIndex(user => user.username === currentUser.username);
-                if (userIndex !== -1) {
-                    users[userIndex].subscription = true; 
-                    localStorage.setItem('users', JSON.stringify(users));
-                    localStorage.setItem('currentUser', JSON.stringify(users[userIndex]));
-                    updateAccountInfo();
-                    alert('Подписка успешно активирована!');
-                }
-            }
+            alert('Подписка оформлена!');
+            document.getElementById('subscription-status').textContent = 'Оформлена';
         }
 
         function logout() {
-            localStorage.removeItem('currentUser');
-            alert('Вы вышли из аккаунта.');
-            showSection('login');
+            alert('Вы вышли из системы');
+            showSection('home');
         }
 
-        window.onload = function() {
-            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-            if (currentUser) {
-                updateAccountInfo();
-                showSection('account');
-            } else {
-                showSection('home');
-            }
+        function addRoute() {
+            const city = document.getElementById('city').value;
+            const routeName = document.getElementById('route-name').value;
+            const routeType = document.getElementById('route-type').value;
+            const routeTransport = document.getElementById('route-transport').value;
+            const routeDescription = document.getElementById('route-description').value;
+            const streets = Array.from(document.querySelectorAll('input[name^="street-"]')).map(input => input.value);
+
+            console.log({
+                city, routeName, routeType, routeTransport, routeDescription, streets
+            });
         }
+
+        ymaps.ready(function () {
+            var myMap = new ymaps.Map("map", {
+                center: [55.76, 37.64],
+                zoom: 10
+            });
+        });
     </script>
 </body>
 </html>

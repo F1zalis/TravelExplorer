@@ -1,7 +1,41 @@
 document.addEventListener("DOMContentLoaded", () => {
     const app = document.getElementById("app");
 
-    // Pages
+
+document.getElementById('add-street-button').addEventListener('click', function() {
+    const streetsList = document.getElementById('streets-list');
+
+
+    const streetItem = document.createElement('div');
+    streetItem.className = 'street-item';
+
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.name = `street-${streetsList.children.length + 1}`;
+    input.placeholder = `Улица ${streetsList.children.length + 1}`;
+    input.required = true;
+
+    const removeButton = document.createElement('button');
+    removeButton.type = 'button';
+    removeButton.className = 'remove-street-button';
+    removeButton.textContent = 'Удалить';
+    removeButton.style.backgroundColor = 'red';
+    removeButton.style.color = 'white';
+
+
+    removeButton.addEventListener('click', function() {
+        streetsList.removeChild(streetItem);
+    });
+
+
+    streetItem.appendChild(input);
+    streetItem.appendChild(removeButton);
+
+
+    streetsList.appendChild(streetItem);
+});
+
     const pages = {
         home: `
             <header>Путешествия</header>

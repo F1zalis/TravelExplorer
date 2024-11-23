@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Explorer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Travel Explorer</h1>
+    </header>
+
+    <nav>
+        <button onclick="showSection('home')">Главная</button>
+        <button onclick="showSection('routes')">Найти маршрут</button>
+        <button onclick="showSection('create')">Создать маршрут</button>
+        <button onclick="showSection('login')">Вход</button>
+        <button onclick="showSection('account')">Аккаунт</button>
+        <button onclick="showSection('register')">Регистрация</button>
+    </nav>
+
+    <section id="home" class="background-image hidden">
+        <h2>Добро пожаловать в Travel Explorer!</h2>
+    </section>
+
+
+    <section id="routes" class="container hidden">
+        <h2>Доступные маршруты</h2>
+        <div id="routes-list">
+            <div class="card">
+                <h3>Маршрут 1</h3>
+                <p>Описание маршрута.</p>
+            </div>
+            <div class="card">
+                <h3>Маршрут 2</h3>
+                <p>Описание маршрута.</p>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="create" class="container light-background hidden">
+        <h2>Создать маршрут</h2>
+        <form id="create-route-form">
+            <label for="route-name">Название маршрута:</label>
+            <input type="text" id="route-name" name="route-name" placeholder="Введите название маршрута">
+
+            <label for="route-type">Тип маршрута:</label>
+            <select id="route-type" name="route-type">
+                <option value="adventure">Приключение</option>
+                <option value="leisure">Отдых</option>
+                <option value="nature">Природа</option>
+                <option value="cultural">Культурный</option>
+                <option value="historic">Исторический</option>
+                <option value="beach">Пляжный</option>
+                <option value="mountain">Горный</option>
+                <option value="urban">Городской</option>
+            </select>
+
+            <label for="route-description">Описание маршрута:</label>
+            <textarea id="route-description" name="route-description" rows="4" placeholder="Введите описание маршрута"></textarea>
+
+            <button type="button" onclick="addRoute()">Добавить маршрут</button>
+        </form>
+    </section>
+
+ 
+    <section id="register" class="container hidden">
+        <h2>Регистрация</h2>
+        <form id="register-form">
+            <label for="register-username">Имя пользователя:</label>
+            <input type="text" id="register-username" name="register-username" placeholder="Введите имя пользователя" required>
+
+            <label for="register-email">Email:</label>
+            <input type="email" id="register-email" name="register-email" placeholder="Введите email" required>
+
+            <label for="register-password">Пароль:</label>
+            <input type="password" id="register-password" name="register-password" placeholder="Введите пароль" required>
+
+            <button type="button" onclick="registerUser()">Зарегистрироваться</button>
+        </form>
+    </section>
+
+ 
+    <section id="login" class="container hidden">
+        <h2>Вход</h2>
+        <form id="login-form" onsubmit="loginUser(event)">
+            <label for="login-username">Имя пользователя:</label>
+            <input type="text" id="login-username" name="login-username" placeholder="Введите имя пользователя">
+
+            <label for="login-password">Пароль:</label>
+            <input type="password" id="login-password" name="login-password" placeholder="Введите пароль">
+
+            <button type="submit">Войти</button>
+        </form>
+    </section>
+
+ 
+    <section id="account" class="container hidden">
+        <h2>Аккаунт</h2>
+        <p><strong>Имя:</strong> <span id="account-name">Не зарегистрирован</span></p>
+        <p><strong>Email:</strong> <span id="account-email">Не зарегистрирован</span></p>
+        <p><strong>Статус подписки:</strong> <span id="subscription-status">Не оформлена</span></p>
+        <button id="subscribe-button" onclick="subscribe()">Оформить подписку за 1 рубль в месяц</button>
+        <button onclick="logout()">Выйти</button>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Travel Explorer. Все права защищены.</p>
+    </footer>
+
+    <script>
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('section');
+            sections.forEach(section => section.classList.add('hidden'));
+            document.getElementById(sectionId).classList.remove('hidden');
+        }
+
+        function registerUser() {
+            const username = document.getElementById('register-username').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+
+            if (username && email && password) {
+                // Получаем список пользователей
+                const users = JSON.parse(localStorage.getItem('users')) || [];
+                if (users.find(user => user.username === username)) {
+                    alert('Пользователь с таким именем уже существует.');
+                    return;
+                }
+
+           
+                users.push({
+                    username,
+                    email,
+                    password,
+                    subscription: false
+                });
+                localStorage.setItem('users', JSON.stringify(users));
+                alert('Регистрация прошла успешно!');
+                showSection('login');
+            } else {
+                alert('Пожалуйста, заполните все поля.');
+            }
+        }
+
+        function loginUser(event) {
+            event.preventDefault();
+
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(user => user.username === username && user.password === password);
+
+            if (user) {
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                updateAccountInfo();
+                showSection('account');
+            } else {
+                alert('Неверные данные для входа.');
+            }
+        }
+
+        function updateAccountInfo() {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            if (user) {
+                document.getElementById('account-name').textContent = user.username;
+                document.getElementById('account-email').textContent = user.email;document.getElementById('subscription-status').textContent = user.subscription ? 'Активна' : 'Не активна';
+                document.getElementById('subscribe-button').textContent = user.subscription ? 'Подписка активна' : 'Оформить подписку за 1 рубль в месяц';
+            }
+        }
+
+        function subscribe() {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+            if (currentUser) {
+                const userIndex = users.findIndex(user => user.username === currentUser.username);
+                if (userIndex !== -1) {
+                    users[userIndex].subscription = true; 
+                    localStorage.setItem('users', JSON.stringify(users));
+                    localStorage.setItem('currentUser', JSON.stringify(users[userIndex]));
+                    updateAccountInfo();
+                    alert('Подписка успешно активирована!');
+                }
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            alert('Вы вышли из аккаунта.');
+            showSection('login');
+        }
+
+        window.onload = function() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser) {
+                updateAccountInfo();
+                showSection('account');
+            } else {
+                showSection('home');
+            }
+        }
+    </script>
+</body>
+</html>

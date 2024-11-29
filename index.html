@@ -53,7 +53,7 @@
     </nav>
 
 
-    <section id="home" class="container">
+    <section id="home" class="container">   
         <div class="background-image"></div>
         <h2>Добро пожаловать в Travel Explorer!</h2>
     </section>
@@ -61,31 +61,39 @@
 
     <section id="routes" class="container hidden">
         <h2>Доступные маршруты</h2>
-        <div id="routes-list">
-            <div class="card">
-                <h3>Маршрут 1</h3>
-                <p>Описание маршрута.</p>
-            </div>
-            <div class="card">
-                <h3>Маршрут 2</h3>
-                <p>Описание маршрута.</p>
-            </div>
+
+        <div class="tabs">
+            <button class="tab-button active" data-tab="recommended" onclick="loadRoutes('recommended')">Рекомендованные</button>
+            <button class="tab-button" data-tab="new" onclick="loadRoutes('new')">Новые</button>
+            <button class="tab-button" data-tab="old" onclick="loadRoutes('old')">Старые</button>
+            <button class="tab-button" data-tab="popular" onclick="loadRoutes('popular')">Популярные</button>
+            <button class="tab-button" data-tab="all" onclick="loadRoutes('all')">Все</button>
+        </div>
+        
+        <div class="tab-content">
+            <div id="recommended" class="tab active"></div>
+            <div id="new" class="tab"></div>
+            <div id="old" class="tab"></div>
+            <div id="popular" class="tab"></div>
+            <div id="all" class="tab"></div>
         </div>
     </section>
-
+    
+    
     
 
     <section id="create" class="container light-background hidden">
         <h2>Создать маршрут</h2>
-        <form id="create-route-form">
+        <form id="create-route-form" style="max-width: 700px; margin: auto;">
             <label for="city">Город:</label>
             <input type="text" id="city" name="city" placeholder="Введите город" required>
-
+    
             <label for="route-name">Название маршрута:</label>
             <input type="text" id="route-name" name="route-name" placeholder="Введите название маршрута">
-
+        
+    
             <label for="route-type">Тип маршрута:</label>
-            <select id="route-type" name="route-type">
+            <select id="route-type" name="route-type" style="width: 100%; margin-bottom: 10px;">
                 <option value="adventure">Приключение</option>
                 <option value="leisure">Отдых</option>
                 <option value="nature">Природа</option>
@@ -95,39 +103,38 @@
                 <option value="mountain">Горный</option>
                 <option value="urban">Городской</option>
             </select>
-
+    
             <label for="route-transport">Тип транспорта:</label>
-            <select id="route-transport" name="route-transport">
+            <select id="route-transport" name="route-transport" style="width: 100%; margin-bottom: 10px;">
                 <option value="foot">Пешком</option>
                 <option value="car">На машине</option>
                 <option value="bicycle">На велосипеде</option>
             </select>
-
+    
             <label for="route-description">Описание маршрута:</label>
             <textarea id="route-description" name="route-description" rows="4" placeholder="Введите описание маршрута"></textarea>
-
+    
             <label for="route-streets">Улицы для маршрута:</label>
             <div id="streets-list">
                 <div class="street-item">
                     <input type="text" name="street-1" placeholder="Улица 1" required>
-                    <button type="button" class="remove-street-button">Удалить</button>
                 </div>
                 <div class="street-item">
                     <input type="text" name="street-2" placeholder="Улица 2" required>
-                    <button type="button" class="remove-street-button">Удалить</button>
                 </div>
                 <div class="street-item">
                     <input type="text" name="street-3" placeholder="Улица 3" required>
-                    <button type="button" class="remove-street-button">Удалить</button>
                 </div>
             </div>
-            <button type="button" id="add-street-button">Добавить улицу</button>
-
-            <div id="map"></div>
-
-            <button type="button" onclick="addRoute()">Добавить маршрут</button>
+            <button type="button" id="add-street-button" style="margin-top: 10px; background-color: #27ae60;">Добавить улицу</button>
+    
+            <div id="map" style="margin-top: 20px;"></div>
+    
+            <button type="button" onclick="addRoute()" style="margin-top: 20px;">Добавить маршрут</button>
         </form>
     </section>
+    
+    
 
     <section id="register" class="container hidden">
         <h2>Регистрация</h2>
@@ -172,6 +179,9 @@
     </footer>
 
     <script>
+         let viewedRoutes = []; 
+         let addedRoutes = [];
+
         function showSection(sectionId) {
             const sections = document.querySelectorAll('section');
             sections.forEach(section => section.classList.add('hidden'));
@@ -246,5 +256,104 @@
             });
         });
     </script>
+
+
+
+<script>
+    const routes = {
+        recommended: [
+            { name: "Маршрут 1", description: "Описание маршрута 1" },
+            { name: "Маршрут 2", description: "Описание маршрута 2" },
+        ],
+        new: [
+            { name: "Маршрут 3", description: "Описание маршрута 3" },
+        ],
+        old: [
+            { name: "Маршрут 4", description: "Описание маршрута 4" },
+        ],
+        popular: [
+            { name: "Маршрут 5", description: "Описание маршрута 5" },
+        ],
+        all: [
+            { name: "Маршрут 6", description: "Описание маршрута 6" },
+            { name: "Маршрут 7", description: "Описание маршрута 7" },
+        ],
+    };
+
+    function showSection(sectionId) {
+        const sections = document.querySelectorAll('section');
+        sections.forEach(section => {
+            section.classList.add('hidden');
+        });
+
+        const activeSection = document.getElementById(sectionId);
+        activeSection.classList.remove('hidden');
+    }
+
+    function loadRoutes(category) {
+        const tabs = document.querySelectorAll('.tab-button');
+        tabs.forEach(tab => tab.classList.remove('active'));
+        document.querySelector(`.tab-button[data-tab="${category}"]`).classList.add('active');
+
+        const tabContents = document.querySelectorAll('.tab');
+        tabContents.forEach(tabContent => tabContent.classList.remove('active'));
+        document.getElementById(category).classList.add('active');
+
+        const content = routes[category].map(route => {
+            return `<div class="card">
+                        <h3>${route.name}</h3>
+                        <p>${route.description}</p>
+                    </div>`;
+        }).join('');
+
+        document.getElementById(category).innerHTML = content;
+    }
+
+    function addRoute() {
+    }
+
+    function registerUser() {
+    }
+
+    function loginUser(event) {
+        event.preventDefault();
+    }
+
+    function subscribe() {
+    }
+
+    function logout() {
+    }
+
+    loadRoutes('recommended');
+
+    // Обновляем рекомендации
+     updateRecommendations();
+
+        // Обновляем список рекомендаций
+        function updateRecommendations() {
+            const recommendedRoutes = document.getElementById('recommended');
+            recommendedRoutes.innerHTML = '<h3>Рекомендации</h3>';
+
+            // Генерируем рекомендации на основе добавленных маршрутов
+            const recommended = addedRoutes.filter(route => route.routeType === addedRoutes[addedRoutes.length - 1].routeType); // Просто пример
+
+            recommended.forEach(route => {
+                const routeElement = document.createElement('div');
+                routeElement.classList.add('card');
+                routeElement.innerHTML = `
+                    <h4>${route.routeName}</h4>
+                    <p>${route.city}</p>
+                    <p>${route.routeType} маршрут</p>
+                    <p>${route.routeDescription}</p>
+                    <p><strong>Улицы:</strong> ${route.streets.join(', ')}</p>
+                `;
+                recommendedRoutes.appendChild(routeElement);
+            });
+        }
+
+        // Инициализация страницы с рекомендациями
+        window.onload = updateRecommendations;
+</script>
 </body>
 </html>

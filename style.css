@@ -77,6 +77,13 @@ nav button:hover {
     margin-bottom: 1em;
 }
 
+/* Для текстового поля */
+textarea {
+    width: 100%; 
+    max-width: 100%; 
+    box-sizing: border-box; 
+}
+
 
 .light-background {
     background-color: #dceefb; 
@@ -165,6 +172,75 @@ footer {
     border-radius: 4px;
 }
 
+/* Обновление выравнивания формы */
+form input, form textarea, form select {
+    margin-bottom: 10px;
+}
+
+/* Исправление для кнопок */
+.remove-street-button {
+    background-color: red;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
 .remove-street-button:hover {
     background-color: darkred;
+}
+
+/* Карта и адаптивное отображение */
+#map {
+    width: 100%;
+    height: 300px;
+    border: 1px solid #ccc;
+    margin-top: 10px;
+}
+
+/* Общий стиль для вкладок */
+.tabs {
+    display: flex;
+    justify-content: start; /* Располагаем кнопки в начале */
+    gap: 10px; /* Расстояние между кнопками */
+    margin-bottom: 20px; /* Отступ снизу вкладок */
+}
+
+.tab-button {
+    padding: 10px 20px; /* Внутренние отступы кнопок */
+    background-color: #f0f0f0; /* Серый фон */
+    border: 1px solid #ccc; /* Светлая рамка */
+    border-radius: 5px; /* Скруглённые углы */
+    cursor: pointer; /* Указатель нажатия */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Плавные изменения стиля */
+}
+
+.tab-button:hover {
+    background-color: #e0e0e0; /* Более тёмный фон при наведении */
+    color: #333; /* Чуть более тёмный текст */
+}
+
+.tab-button.active {
+    background-color: #007bff; /* Синий фон для активной кнопки */
+    color: white; /* Белый текст */
+    border-color: #0056b3; /* Более тёмная рамка */
+}
+
+/* Стиль для контейнера содержимого вкладок */
+.tab-content {
+    border: 1px solid #ccc; /* Рамка вокруг вкладок */
+    border-radius: 5px; /* Скруглённые углы */
+    padding: 20px; /* Отступы внутри содержимого */
+    background-color: #fff; /* Белый фон */
+}
+
+/* По умолчанию скрываем все вкладки */
+.tab {
+    display: none;
+}
+
+/* Показываем только активную вкладку */
+.tab.active {
+    display: block;
 }

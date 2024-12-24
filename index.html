@@ -32,6 +32,10 @@
                     <li><button onclick="showSection('register')"><i class="fas fa-user-plus"></i> Регистрация</button></li>
                     <li><button onclick="showSection('account')"><i class="fas fa-user-circle"></i> Аккаунт</button></li>
                 </ul>
+                <!-- Кнопка для мобильного меню -->
+                <div class="hamburger" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars"></i>
+                </div>
             </nav>
         </div>
     </header>
@@ -43,7 +47,7 @@
                 <div class="hero-content">
                     <h2>Добро пожаловать в Travel Explorer!</h2>
                     <p>Исследуйте лучшие маршруты по всему миру.</p>
-                    <button onclick="showSection('routes')">Начать исследование</button>
+                    <button onclick="showSection('routes')"><i class="fas fa-search-location"></i> Начать исследование</button>
                 </div>
             </div>
         </section>
@@ -120,7 +124,7 @@
 
                 <div id="map"></div>
 
-                <button type="button" onclick="addRoute()">Добавить маршрут</button>
+                <button type="button" onclick="addRoute()"><i class="fas fa-plus"></i> Добавить маршрут</button>
             </form>
         </section>
 
@@ -182,9 +186,20 @@
 
     <footer>
         <p>&copy; 2024 Travel Explorer. Все права защищены.</p>
+        <div class="social-icons">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+        </div>
     </footer>
 
     <script>
+        // JavaScript для мобильного меню
+        function toggleMobileMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.classList.toggle('active');
+        }
+
         let viewedRoutes = []; 
         let addedRoutes = [];
 
@@ -192,6 +207,11 @@
             const sections = document.querySelectorAll('main section');
             sections.forEach(section => section.classList.add('hidden'));
             document.getElementById(sectionId).classList.remove('hidden');
+            // Закрытие мобильного меню после выбора
+            const navLinks = document.querySelector('.nav-links');
+            if (navLinks.classList.contains('active')) {
+                navLinks.classList.remove('active');
+            }
         }
 
         // Обработка динамического добавления/удаления улиц

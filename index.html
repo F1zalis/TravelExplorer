@@ -5,182 +5,146 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Travel Explorer</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script> 
-    <style>
-        .remove-street-button {
-            background-color: red;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-            margin-left: 10px;
-        }
-
-        .remove-street-button:hover {
-            background-color: darkred;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .card {
-            background-color: #f9f9f9;
-            padding: 20px;
-            margin: 10px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-        }
-        
-        #map {
-            width: 100%;
-            height: 400px;
-        }
-    </style>
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 </head>
 <body>
     <header>
-        <h1>Travel Explorer</h1>
+        <div class="logo">
+            <h1>Travel Explorer</h1>
+        </div>
+        <nav>
+            <ul class="nav-links">
+                <li><button onclick="showSection('home')">Главная</button></li>
+                <li class="dropdown">
+                    <button class="dropbtn">Маршруты</button>
+                    <div class="dropdown-content">
+                        <a href="#" onclick="showSection('routes')">Найти маршрут</a>
+                        <a href="#" onclick="showSection('create')">Создать маршрут</a>
+                    </div>
+                </li>
+                <li><button onclick="showSection('login')">Вход</button></li>
+                <li><button onclick="showSection('register')">Регистрация</button></li>
+                <li><button onclick="showSection('account')">Аккаунт</button></li>
+            </ul>
+        </nav>
     </header>
 
-    <nav>
-        <button onclick="showSection('home')">Главная</button>
-        <button onclick="showSection('routes')">Найти маршрут</button>
-        <button onclick="showSection('create')">Создать маршрут</button>
-        <button onclick="showSection('login')">Вход</button>
-        <button onclick="showSection('account')">Аккаунт</button>
-        <button onclick="showSection('register')">Регистрация</button>
-    </nav>
-
-
-    <section id="home" class="container">   
-        <div class="background-image"></div>
-        <h2>Добро пожаловать в Travel Explorer!</h2>
-    </section>
-
-
-    <section id="routes" class="container hidden">
-        <h2>Доступные маршруты</h2>
-
-        <div class="tabs">
-            <button class="tab-button active" data-tab="recommended" onclick="loadRoutes('recommended')">Рекомендованные</button>
-            <button class="tab-button" data-tab="new" onclick="loadRoutes('new')">Новые</button>
-            <button class="tab-button" data-tab="old" onclick="loadRoutes('old')">Старые</button>
-            <button class="tab-button" data-tab="popular" onclick="loadRoutes('popular')">Популярные</button>
-            <button class="tab-button" data-tab="all" onclick="loadRoutes('all')">Все</button>
-        </div>
-        
-        <div class="tab-content">
-            <div id="recommended" class="tab active"></div>
-            <div id="new" class="tab"></div>
-            <div id="old" class="tab"></div>
-            <div id="popular" class="tab"></div>
-            <div id="all" class="tab"></div>
-        </div>
-    </section>
-    
-    
-    
-
-    <section id="create" class="container light-background hidden">
-        <h2>Создать маршрут</h2>
-        <form id="create-route-form" style="max-width: 700px; margin: auto;">
-            <label for="city">Город:</label>
-            <input type="text" id="city" name="city" placeholder="Введите город" required>
-    
-            <label for="route-name">Название маршрута:</label>
-            <input type="text" id="route-name" name="route-name" placeholder="Введите название маршрута">
-        
-    
-            <label for="route-type">Тип маршрута:</label>
-            <select id="route-type" name="route-type" style="width: 100%; margin-bottom: 10px;">
-                <option value="adventure">Приключение</option>
-                <option value="leisure">Отдых</option>
-                <option value="nature">Природа</option>
-                <option value="cultural">Культурный</option>
-                <option value="historic">Исторический</option>
-                <option value="beach">Пляжный</option>
-                <option value="mountain">Горный</option>
-                <option value="urban">Городской</option>
-            </select>
-    
-            <label for="route-transport">Тип транспорта:</label>
-            <select id="route-transport" name="route-transport" style="width: 100%; margin-bottom: 10px;">
-                <option value="foot">Пешком</option>
-                <option value="car">На машине</option>
-                <option value="bicycle">На велосипеде</option>
-            </select>
-    
-            <label for="route-description">Описание маршрута:</label>
-            <textarea id="route-description" name="route-description" rows="4" placeholder="Введите описание маршрута"></textarea>
-    
-            <label for="route-streets">Улицы для маршрута:</label>
-            <div id="streets-list">
-                <div class="street-item">
-                    <input type="text" name="street-1" placeholder="Улица 1" required>
-                </div>
-                <div class="street-item">
-                    <input type="text" name="street-2" placeholder="Улица 2" required>
-                </div>
-                <div class="street-item">
-                    <input type="text" name="street-3" placeholder="Улица 3" required>
-                </div>
+    <main>
+        <section id="home" class="container">   
+            <div class="hero">
+                <h2>Добро пожаловать в Travel Explorer!</h2>
+                <p>Исследуйте лучшие маршруты по всему миру.</p>
             </div>
-            <button type="button" id="add-street-button" style="margin-top: 10px; background-color: #27ae60;">Добавить улицу</button>
-    
-            <div id="map" style="margin-top: 20px;"></div>
-    
-            <button type="button" onclick="addRoute()" style="margin-top: 20px;">Добавить маршрут</button>
-        </form>
-    </section>
-    
-    
+        </section>
 
-    <section id="register" class="container hidden">
-        <h2>Регистрация</h2>
-        <form id="register-form">
-            <label for="register-username">Имя пользователя:</label>
-            <input type="text" id="register-username" name="register-username" placeholder="Введите имя пользователя" required>
+        <section id="routes" class="container hidden">
+            <h2>Доступные маршруты</h2>
+            <div class="tabs">
+                <button class="tab-button active" data-tab="recommended" onclick="loadRoutes('recommended')">Рекомендованные</button>
+                <button class="tab-button" data-tab="new" onclick="loadRoutes('new')">Новые</button>
+                <button class="tab-button" data-tab="popular" onclick="loadRoutes('popular')">Популярные</button>
+                <button class="tab-button" data-tab="all" onclick="loadRoutes('all')">Все</button>
+            </div>
+            <div class="tab-content">
+                <div id="recommended" class="tab active"></div>
+                <div id="new" class="tab"></div>
+                <div id="popular" class="tab"></div>
+                <div id="all" class="tab"></div>
+            </div>
+        </section>
 
-            <label for="register-email">Email:</label>
-            <input type="email" id="register-email" name="register-email" placeholder="Введите email" required>
+        <section id="create" class="container hidden">
+            <h2>Создать маршрут</h2>
+            <form id="create-route-form">
+                <label for="city">Город:</label>
+                <input type="text" id="city" name="city" placeholder="Введите город" required>
 
-            <label for="register-password">Пароль:</label>
-            <input type="password" id="register-password" name="register-password" placeholder="Введите пароль" required>
+                <label for="route-name">Название маршрута:</label>
+                <input type="text" id="route-name" name="route-name" placeholder="Введите название маршрута" required>
 
-            <button type="button" onclick="registerUser()">Зарегистрироваться</button>
-        </form>
-    </section>
+                <label for="route-type">Тип маршрута:</label>
+                <select id="route-type" name="route-type">
+                    <option value="adventure">Приключение</option>
+                    <option value="leisure">Отдых</option>
+                    <option value="nature">Природа</option>
+                    <option value="cultural">Культурный</option>
+                    <option value="historic">Исторический</option>
+                    <option value="beach">Пляжный</option>
+                    <option value="mountain">Горный</option>
+                    <option value="urban">Городской</option>
+                </select>
 
-    <section id="login" class="container hidden">
-        <h2>Вход</h2>
-        <form id="login-form" onsubmit="loginUser(event)">
-            <label for="login-username">Имя пользователя:</label>
-            <input type="text" id="login-username" name="login-username" placeholder="Введите имя пользователя">
+                <label for="route-transport">Тип транспорта:</label>
+                <select id="route-transport" name="route-transport">
+                    <option value="foot">Пешком</option>
+                    <option value="car">На машине</option>
+                    <option value="bicycle">На велосипеде</option>
+                </select>
 
-            <label for="login-password">Пароль:</label>
-            <input type="password" id="login-password" name="login-password" placeholder="Введите пароль">
+                <label for="route-description">Описание маршрута:</label>
+                <textarea id="route-description" name="route-description" rows="4" placeholder="Введите описание маршрута"></textarea>
 
-            <button type="submit">Войти</button>
-        </form>
-    </section>
+                <label for="route-streets">Улицы для маршрута:</label>
+                <div id="streets-list">
+                    <div class="street-item">
+                        <input type="text" name="street-1" placeholder="Улица 1" required>
+                        <button type="button" class="remove-street-button">Удалить</button>
+                    </div>
+                </div>
+                <button type="button" id="add-street-button">Добавить улицу</button>
 
-    <section id="account" class="container hidden">
-        <h2>Аккаунт</h2>
-        <p><strong>Имя:</strong> <span id="account-name">Не зарегистрирован</span></p>
-        <p><strong>Email:</strong> <span id="account-email">Не зарегистрирован</span></p>
-        <p><strong>Статус подписки:</strong> <span id="subscription-status">Не оформлена</span></p>
-        <button id="subscribe-button" onclick="subscribe()">Оформить подписку за 1 рубль в месяц</button>
-        <button onclick="logout()">Выйти</button>
-    </section>
+                <div id="map"></div>
+
+                <button type="button" onclick="addRoute()">Добавить маршрут</button>
+            </form>
+        </section>
+
+        <section id="register" class="container hidden">
+            <h2>Регистрация</h2>
+            <form id="register-form">
+                <label for="register-username">Имя пользователя:</label>
+                <input type="text" id="register-username" name="register-username" placeholder="Введите имя пользователя" required>
+
+                <label for="register-email">Email:</label>
+                <input type="email" id="register-email" name="register-email" placeholder="Введите email" required>
+
+                <label for="register-password">Пароль:</label>
+                <input type="password" id="register-password" name="register-password" placeholder="Введите пароль" required>
+
+                <button type="button" onclick="registerUser()">Зарегистрироваться</button>
+            </form>
+        </section>
+
+        <section id="login" class="container hidden">
+            <h2>Вход</h2>
+            <form id="login-form" onsubmit="loginUser(event)">
+                <label for="login-username">Имя пользователя:</label>
+                <input type="text" id="login-username" name="login-username" placeholder="Введите имя пользователя" required>
+
+                <label for="login-password">Пароль:</label>
+                <input type="password" id="login-password" name="login-password" placeholder="Введите пароль" required>
+
+                <button type="submit">Войти</button>
+            </form>
+        </section>
+
+        <section id="account" class="container hidden">
+            <h2>Аккаунт</h2>
+            <p><strong>Имя:</strong> <span id="account-name">Не зарегистрирован</span></p>
+            <p><strong>Email:</strong> <span id="account-email">Не зарегистрирован</span></p>
+            <p><strong>Статус подписки:</strong> <span id="subscription-status">Не оформлена</span></p>
+            <button id="subscribe-button" onclick="subscribe()">Оформить подписку за 1 рубль в месяц</button>
+            <button onclick="logout()">Выйти</button>
+        </section>
+    </main>
 
     <footer>
         <p>&copy; 2024 Travel Explorer. Все права защищены.</p>
     </footer>
 
     <script>
-         let viewedRoutes = []; 
-         let addedRoutes = [];
+        let viewedRoutes = []; 
+        let addedRoutes = [];
 
         function showSection(sectionId) {
             const sections = document.querySelectorAll('section');
@@ -188,6 +152,7 @@
             document.getElementById(sectionId).classList.remove('hidden');
         }
 
+        // Обработка динамического добавления/удаления улиц
         document.getElementById('add-street-button').addEventListener('click', function() {
             const streetsList = document.getElementById('streets-list');
             const streetItem = document.createElement('div');
@@ -212,30 +177,44 @@
             streetsList.appendChild(streetItem);
         });
 
+        // Регистрация пользователя
         function registerUser() {
             const username = document.getElementById('register-username').value;
             const email = document.getElementById('register-email').value;
             const password = document.getElementById('register-password').value;
             console.log('Пользователь зарегистрирован:', { username, email, password });
+            alert('Регистрация прошла успешно!');
+            showSection('home');
         }
 
+        // Вход пользователя
         function loginUser(event) {
             event.preventDefault();
             const username = document.getElementById('login-username').value;
             const password = document.getElementById('login-password').value;
             console.log('Пользователь вошел:', { username, password });
+            alert('Вход выполнен успешно!');
+            document.getElementById('account-name').textContent = username;
+            document.getElementById('account-email').textContent = 'example@example.com'; // Здесь можно добавить реальный email
+            showSection('account');
         }
 
+        // Подписка
         function subscribe() {
             alert('Подписка оформлена!');
             document.getElementById('subscription-status').textContent = 'Оформлена';
         }
 
+        // Выход из аккаунта
         function logout() {
             alert('Вы вышли из системы');
+            document.getElementById('account-name').textContent = 'Не зарегистрирован';
+            document.getElementById('account-email').textContent = 'Не зарегистрирован';
+            document.getElementById('subscription-status').textContent = 'Не оформлена';
             showSection('home');
         }
 
+        // Добавление маршрута
         function addRoute() {
             const city = document.getElementById('city').value;
             const routeName = document.getElementById('route-name').value;
@@ -244,9 +223,12 @@
             const routeDescription = document.getElementById('route-description').value;
             const streets = Array.from(document.querySelectorAll('input[name^="street-"]')).map(input => input.value);
 
-            console.log({
-                city, routeName, routeType, routeTransport, routeDescription, streets
-            });
+            const newRoute = { city, routeName, routeType, routeTransport, routeDescription, streets };
+            addedRoutes.push(newRoute);
+            console.log('Маршрут добавлен:', newRoute);
+            alert('Маршрут успешно добавлен!');
+            showSection('routes');
+            loadRoutes('all');
         }
 
         ymaps.ready(function () {
@@ -255,96 +237,84 @@
                 zoom: 10
             });
         });
-    </script>
 
+        // Обработка вкладок маршрутов
+        const routes = {
+            recommended: [
+                { name: "Маршрут 1", description: "Описание маршрута 1" },
+                { name: "Маршрут 2", description: "Описание маршрута 2" },
+            ],
+            new: [
+                { name: "Маршрут 3", description: "Описание маршрута 3" },
+            ],
+            popular: [
+                { name: "Маршрут 5", description: "Описание маршрута 5" },
+            ],
+            all: [
+                { name: "Маршрут 1", description: "Описание маршрута 1" },
+                { name: "Маршрут 2", description: "Описание маршрута 2" },
+                { name: "Маршрут 3", description: "Описание маршрута 3" },
+                { name: "Маршрут 4", description: "Описание маршрута 4" },
+                { name: "Маршрут 5", description: "Описание маршрута 5" },
+                { name: "Маршрут 6", description: "Описание маршрута 6" },
+            ],
+        };
 
+        function loadRoutes(category) {
+            const tabs = document.querySelectorAll('.tab-button');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            document.querySelector(`.tab-button[data-tab="${category}"]`).classList.add('active');
 
-<script>
-    const routes = {
-        recommended: [
-            { name: "Маршрут 1", description: "Описание маршрута 1" },
-            { name: "Маршрут 2", description: "Описание маршрута 2" },
-        ],
-        new: [
-            { name: "Маршрут 3", description: "Описание маршрута 3" },
-        ],
-        old: [
-            { name: "Маршрут 4", description: "Описание маршрута 4" },
-        ],
-        popular: [
-            { name: "Маршрут 5", description: "Описание маршрута 5" },
-        ],
-        all: [
-            { name: "Маршрут 6", description: "Описание маршрута 6" },
-            { name: "Маршрут 7", description: "Описание маршрута 7" },
-        ],
-    };
+            const tabContents = document.querySelectorAll('.tab');
+            tabContents.forEach(tabContent => tabContent.classList.remove('active'));
+            document.getElementById(category).classList.add('active');
 
-    function showSection(sectionId) {
-        const sections = document.querySelectorAll('section');
-        sections.forEach(section => {
-            section.classList.add('hidden');
-        });
+            let content = routes[category].map(route => {
+                return `<div class="card">
+                            <h3>${route.name}</h3>
+                            <p>${route.description}</p>
+                        </div>`;
+            }).join('');
 
-        const activeSection = document.getElementById(sectionId);
-        activeSection.classList.remove('hidden');
-    }
+            // Добавление пользовательских маршрутов в раздел "Все"
+            if (category === 'all') {
+                addedRoutes.forEach(route => {
+                    content += `<div class="card">
+                                <h3>${route.routeName}</h3>
+                                <p><strong>Город:</strong> ${route.city}</p>
+                                <p><strong>Тип:</strong> ${route.routeType}</p>
+                                <p>${route.routeDescription}</p>
+                                <p><strong>Улицы:</strong> ${route.streets.join(', ')}</p>
+                            </div>`;
+                });
+            }
 
-    function loadRoutes(category) {
-        const tabs = document.querySelectorAll('.tab-button');
-        tabs.forEach(tab => tab.classList.remove('active'));
-        document.querySelector(`.tab-button[data-tab="${category}"]`).classList.add('active');
+            document.getElementById(category).innerHTML = content;
+        }
 
-        const tabContents = document.querySelectorAll('.tab');
-        tabContents.forEach(tabContent => tabContent.classList.remove('active'));
-        document.getElementById(category).classList.add('active');
+        // Инициализация маршрутов
+        loadRoutes('recommended');
 
-        const content = routes[category].map(route => {
-            return `<div class="card">
-                        <h3>${route.name}</h3>
-                        <p>${route.description}</p>
-                    </div>`;
-        }).join('');
-
-        document.getElementById(category).innerHTML = content;
-    }
-
-    function addRoute() {
-    }
-
-    function registerUser() {
-    }
-
-    function loginUser(event) {
-        event.preventDefault();
-    }
-
-    function subscribe() {
-    }
-
-    function logout() {
-    }
-
-    loadRoutes('recommended');
-
-    // Обновляем рекомендации
-     updateRecommendations();
-
-        // Обновляем список рекомендаций
+        // Обновление рекомендаций
         function updateRecommendations() {
             const recommendedRoutes = document.getElementById('recommended');
-            recommendedRoutes.innerHTML = '<h3>Рекомендации</h3>';
+            recommendedRoutes.innerHTML = '';
 
-            // Генерируем рекомендации на основе добавленных маршрутов
-            const recommended = addedRoutes.filter(route => route.routeType === addedRoutes[addedRoutes.length - 1].routeType); // Просто пример
+            if (addedRoutes.length === 0) {
+                recommendedRoutes.innerHTML = '<p>Нет рекомендаций. Добавьте свой маршрут!</p>';
+                return;
+            }
+
+            const latestRoute = addedRoutes[addedRoutes.length - 1];
+            const recommended = addedRoutes.filter(route => route.routeType === latestRoute.routeType);
 
             recommended.forEach(route => {
                 const routeElement = document.createElement('div');
                 routeElement.classList.add('card');
                 routeElement.innerHTML = `
                     <h4>${route.routeName}</h4>
-                    <p>${route.city}</p>
-                    <p>${route.routeType} маршрут</p>
+                    <p><strong>Город:</strong> ${route.city}</p>
+                    <p><strong>Тип:</strong> ${route.routeType} маршрут</p>
                     <p>${route.routeDescription}</p>
                     <p><strong>Улицы:</strong> ${route.streets.join(', ')}</p>
                 `;
@@ -352,8 +322,8 @@
             });
         }
 
-        // Инициализация страницы с рекомендациями
+        // Обновляем рекомендации при загрузке страницы
         window.onload = updateRecommendations;
-</script>
+    </script>
 </body>
 </html>

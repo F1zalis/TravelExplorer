@@ -3,13 +3,13 @@
     --primary-color: #3b5998;
     --secondary-color: #4a69bd;
     --accent-color: #78e08f;
+    --button-hover: #218838;
+    --danger-color: #dc3545;
+    --danger-hover: #c82333;
     --text-color: #333;
     --background-color: #f5f6fa;
     --light-background: #ffffff;
     --border-color: #ddd;
-    --button-hover: #218838;
-    --danger-color: #dc3545;
-    --danger-hover: #c82333;
     --font-primary: 'Roboto', sans-serif;
     --font-secondary: 'Open Sans', sans-serif;
 }
@@ -52,7 +52,7 @@ header {
 }
 
 nav {
-    margin-top: 0.5em;
+    position: relative;
 }
 
 .nav-links {
@@ -119,6 +119,53 @@ nav {
 
 .dropdown:hover .dropdown-content {
     display: block;
+}
+
+/* Мобильное меню */
+.hamburger {
+    display: none;
+    font-size: 1.5em;
+    cursor: pointer;
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background-color: var(--primary-color);
+        position: absolute;
+        top: 100%;
+        left: 0;
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .nav-links li {
+        width: 100%;
+        text-align: center;
+    }
+
+    .hamburger {
+        display: block;
+    }
+
+    .dropdown-content {
+        position: static;
+        box-shadow: none;
+        border-radius: 0;
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: none;
+    }
+
+    .dropdown.active .dropdown-content {
+        display: block;
+    }
 }
 
 main {
@@ -416,6 +463,21 @@ footer {
     width: 100%;
     margin-top: 3em;
     font-family: var(--font-secondary);
+}
+
+.social-icons {
+    margin-top: 1em;
+}
+
+.social-icons a {
+    color: white;
+    margin: 0 10px;
+    font-size: 1.2em;
+    transition: color 0.3s;
+}
+
+.social-icons a:hover {
+    color: var(--accent-color);
 }
 
 /* Всплывающие подсказки и улучшенные элементы */

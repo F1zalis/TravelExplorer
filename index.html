@@ -5,38 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Travel Explorer</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Подключение Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Подключение Font Awesome для иконок -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Подключение Яндекс.Карт -->
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 </head>
 <body>
     <header>
-        <div class="logo">
-            <h1>Travel Explorer</h1>
+        <div class="container header-container">
+            <div class="logo">
+                <h1>Travel Explorer</h1>
+            </div>
+            <nav>
+                <ul class="nav-links">
+                    <li><button onclick="showSection('home')"><i class="fas fa-home"></i> Главная</button></li>
+                    <li class="dropdown">
+                        <button class="dropbtn"><i class="fas fa-map-marked-alt"></i> Маршруты <i class="fas fa-caret-down"></i></button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="showSection('routes')">Найти маршрут</a>
+                            <a href="#" onclick="showSection('create')">Создать маршрут</a>
+                        </div>
+                    </li>
+                    <li><button onclick="showSection('login')"><i class="fas fa-sign-in-alt"></i> Вход</button></li>
+                    <li><button onclick="showSection('register')"><i class="fas fa-user-plus"></i> Регистрация</button></li>
+                    <li><button onclick="showSection('account')"><i class="fas fa-user-circle"></i> Аккаунт</button></li>
+                </ul>
+            </nav>
         </div>
-        <nav>
-            <ul class="nav-links">
-                <li><button onclick="showSection('home')">Главная</button></li>
-                <li class="dropdown">
-                    <button class="dropbtn">Маршруты</button>
-                    <div class="dropdown-content">
-                        <a href="#" onclick="showSection('routes')">Найти маршрут</a>
-                        <a href="#" onclick="showSection('create')">Создать маршрут</a>
-                    </div>
-                </li>
-                <li><button onclick="showSection('login')">Вход</button></li>
-                <li><button onclick="showSection('register')">Регистрация</button></li>
-                <li><button onclick="showSection('account')">Аккаунт</button></li>
-            </ul>
-        </nav>
     </header>
 
     <main>
+        <!-- Главная Страница -->
         <section id="home" class="container">   
             <div class="hero">
-                <h2>Добро пожаловать в Travel Explorer!</h2>
-                <p>Исследуйте лучшие маршруты по всему миру.</p>
+                <div class="hero-content">
+                    <h2>Добро пожаловать в Travel Explorer!</h2>
+                    <p>Исследуйте лучшие маршруты по всему миру.</p>
+                    <button onclick="showSection('routes')">Начать исследование</button>
+                </div>
             </div>
         </section>
 
+        <!-- Раздел Маршруты -->
         <section id="routes" class="container hidden">
             <h2>Доступные маршруты</h2>
             <div class="tabs">
@@ -53,45 +65,58 @@
             </div>
         </section>
 
+        <!-- Раздел Создать Маршрут -->
         <section id="create" class="container hidden">
             <h2>Создать маршрут</h2>
             <form id="create-route-form">
-                <label for="city">Город:</label>
-                <input type="text" id="city" name="city" placeholder="Введите город" required>
-
-                <label for="route-name">Название маршрута:</label>
-                <input type="text" id="route-name" name="route-name" placeholder="Введите название маршрута" required>
-
-                <label for="route-type">Тип маршрута:</label>
-                <select id="route-type" name="route-type">
-                    <option value="adventure">Приключение</option>
-                    <option value="leisure">Отдых</option>
-                    <option value="nature">Природа</option>
-                    <option value="cultural">Культурный</option>
-                    <option value="historic">Исторический</option>
-                    <option value="beach">Пляжный</option>
-                    <option value="mountain">Горный</option>
-                    <option value="urban">Городской</option>
-                </select>
-
-                <label for="route-transport">Тип транспорта:</label>
-                <select id="route-transport" name="route-transport">
-                    <option value="foot">Пешком</option>
-                    <option value="car">На машине</option>
-                    <option value="bicycle">На велосипеде</option>
-                </select>
-
-                <label for="route-description">Описание маршрута:</label>
-                <textarea id="route-description" name="route-description" rows="4" placeholder="Введите описание маршрута"></textarea>
-
-                <label for="route-streets">Улицы для маршрута:</label>
-                <div id="streets-list">
-                    <div class="street-item">
-                        <input type="text" name="street-1" placeholder="Улица 1" required>
-                        <button type="button" class="remove-street-button">Удалить</button>
-                    </div>
+                <div class="form-group">
+                    <label for="city"><i class="fas fa-city"></i> Город:</label>
+                    <input type="text" id="city" name="city" placeholder="Введите город" required>
                 </div>
-                <button type="button" id="add-street-button">Добавить улицу</button>
+
+                <div class="form-group">
+                    <label for="route-name"><i class="fas fa-route"></i> Название маршрута:</label>
+                    <input type="text" id="route-name" name="route-name" placeholder="Введите название маршрута" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="route-type"><i class="fas fa-tags"></i> Тип маршрута:</label>
+                    <select id="route-type" name="route-type">
+                        <option value="adventure">Приключение</option>
+                        <option value="leisure">Отдых</option>
+                        <option value="nature">Природа</option>
+                        <option value="cultural">Культурный</option>
+                        <option value="historic">Исторический</option>
+                        <option value="beach">Пляжный</option>
+                        <option value="mountain">Горный</option>
+                        <option value="urban">Городской</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="route-transport"><i class="fas fa-bus"></i> Тип транспорта:</label>
+                    <select id="route-transport" name="route-transport">
+                        <option value="foot">Пешком</option>
+                        <option value="car">На машине</option>
+                        <option value="bicycle">На велосипеде</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="route-description"><i class="fas fa-edit"></i> Описание маршрута:</label>
+                    <textarea id="route-description" name="route-description" rows="4" placeholder="Введите описание маршрута"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-road"></i> Улицы для маршрута:</label>
+                    <div id="streets-list">
+                        <div class="street-item">
+                            <input type="text" name="street-1" placeholder="Улица 1" required>
+                            <button type="button" class="remove-street-button"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    </div>
+                    <button type="button" id="add-street-button"><i class="fas fa-plus-circle"></i> Добавить улицу</button>
+                </div>
 
                 <div id="map"></div>
 
@@ -99,42 +124,59 @@
             </form>
         </section>
 
+        <!-- Раздел Регистрация -->
         <section id="register" class="container hidden">
             <h2>Регистрация</h2>
             <form id="register-form">
-                <label for="register-username">Имя пользователя:</label>
-                <input type="text" id="register-username" name="register-username" placeholder="Введите имя пользователя" required>
+                <div class="form-group">
+                    <label for="register-username"><i class="fas fa-user"></i> Имя пользователя:</label>
+                    <input type="text" id="register-username" name="register-username" placeholder="Введите имя пользователя" required>
+                </div>
 
-                <label for="register-email">Email:</label>
-                <input type="email" id="register-email" name="register-email" placeholder="Введите email" required>
+                <div class="form-group">
+                    <label for="register-email"><i class="fas fa-envelope"></i> Email:</label>
+                    <input type="email" id="register-email" name="register-email" placeholder="Введите email" required>
+                </div>
 
-                <label for="register-password">Пароль:</label>
-                <input type="password" id="register-password" name="register-password" placeholder="Введите пароль" required>
+                <div class="form-group">
+                    <label for="register-password"><i class="fas fa-lock"></i> Пароль:</label>
+                    <input type="password" id="register-password" name="register-password" placeholder="Введите пароль" required>
+                </div>
 
-                <button type="button" onclick="registerUser()">Зарегистрироваться</button>
+                <button type="button" onclick="registerUser()"><i class="fas fa-user-plus"></i> Зарегистрироваться</button>
             </form>
         </section>
 
+        <!-- Раздел Вход -->
         <section id="login" class="container hidden">
             <h2>Вход</h2>
             <form id="login-form" onsubmit="loginUser(event)">
-                <label for="login-username">Имя пользователя:</label>
-                <input type="text" id="login-username" name="login-username" placeholder="Введите имя пользователя" required>
+                <div class="form-group">
+                    <label for="login-username"><i class="fas fa-user"></i> Имя пользователя:</label>
+                    <input type="text" id="login-username" name="login-username" placeholder="Введите имя пользователя" required>
+                </div>
 
-                <label for="login-password">Пароль:</label>
-                <input type="password" id="login-password" name="login-password" placeholder="Введите пароль" required>
+                <div class="form-group">
+                    <label for="login-password"><i class="fas fa-lock"></i> Пароль:</label>
+                    <input type="password" id="login-password" name="login-password" placeholder="Введите пароль" required>
+                </div>
 
-                <button type="submit">Войти</button>
+                <button type="submit"><i class="fas fa-sign-in-alt"></i> Войти</button>
             </form>
         </section>
 
+        <!-- Раздел Аккаунт -->
         <section id="account" class="container hidden">
             <h2>Аккаунт</h2>
-            <p><strong>Имя:</strong> <span id="account-name">Не зарегистрирован</span></p>
-            <p><strong>Email:</strong> <span id="account-email">Не зарегистрирован</span></p>
-            <p><strong>Статус подписки:</strong> <span id="subscription-status">Не оформлена</span></p>
-            <button id="subscribe-button" onclick="subscribe()">Оформить подписку за 1 рубль в месяц</button>
-            <button onclick="logout()">Выйти</button>
+            <div class="account-info">
+                <p><strong>Имя:</strong> <span id="account-name">Не зарегистрирован</span></p>
+                <p><strong>Email:</strong> <span id="account-email">Не зарегистрирован</span></p>
+                <p><strong>Статус подписки:</strong> <span id="subscription-status">Не оформлена</span></p>
+            </div>
+            <div class="account-actions">
+                <button id="subscribe-button" onclick="subscribe()"><i class="fas fa-credit-card"></i> Оформить подписку за 1 рубль в месяц</button>
+                <button onclick="logout()"><i class="fas fa-sign-out-alt"></i> Выйти</button>
+            </div>
         </section>
     </main>
 
@@ -147,7 +189,7 @@
         let addedRoutes = [];
 
         function showSection(sectionId) {
-            const sections = document.querySelectorAll('section');
+            const sections = document.querySelectorAll('main section');
             sections.forEach(section => section.classList.add('hidden'));
             document.getElementById(sectionId).classList.remove('hidden');
         }
@@ -166,7 +208,7 @@
 
             const removeButton = document.createElement('button');
             removeButton.type = 'button';
-            removeButton.textContent = 'Удалить';
+            removeButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
             removeButton.classList.add('remove-street-button');
             removeButton.addEventListener('click', function() {
                 streetsList.removeChild(streetItem);
@@ -231,6 +273,7 @@
             loadRoutes('all');
         }
 
+        // Инициализация Яндекс.Карт
         ymaps.ready(function () {
             var myMap = new ymaps.Map("map", {
                 center: [55.76, 37.64],

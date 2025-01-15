@@ -9,34 +9,45 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
     <!-- Подключение Font Awesome для иконок -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Подключение Яндекс.Карт -->
-    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+    <!-- Подключение Яндекс.Карт с вашим API-ключом -->
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=9508ba25-8ee5-4f9b-9180-edc2ced1537c&lang=ru_RU" type="text/javascript"></script>
 </head>
 <body>
     <header>
         <div class="container header-container">
-            <div class="logo">
+            <div class="logo" onclick="showSection('home')" style="cursor: pointer;">
                 <h1>Travel Explorer</h1>
             </div>
             <nav>
-                <ul class="nav-links">
-                    <li><button onclick="showSection('home')"><i class="fas fa-home"></i> Главная</button></li>
+                <ul class="nav-links" id="nav-links">
+                    <li><button class="nav-button active" onclick="showSection('home')"><i class="fas fa-home"></i> Главная</button></li>
                     <li class="dropdown">
                         <button class="dropbtn"><i class="fas fa-map-marked-alt"></i> Маршруты <i class="fas fa-caret-down"></i></button>
                         <div class="dropdown-content">
-                            <a href="#" onclick="showSection('routes')">Найти маршрут</a>
+                            <a href="#" onclick="showSection('routes')">Просмотр маршрутов</a>
                             <a href="#" onclick="showSection('create')">Создать маршрут</a>
                         </div>
                     </li>
-                    <li><button onclick="showSection('login')"><i class="fas fa-sign-in-alt"></i> Вход</button></li>
-                    <li><button onclick="showSection('register')"><i class="fas fa-user-plus"></i> Регистрация</button></li>
-                    <li><button onclick="showSection('account')"><i class="fas fa-user-circle"></i> Аккаунт</button></li>
+                    <li id="login-register-buttons">
+                        <button class="nav-button" onclick="showSection('login')"><i class="fas fa-sign-in-alt"></i> Вход</button>
+                        <button class="nav-button" onclick="showSection('register')"><i class="fas fa-user-plus"></i> Регистрация</button>
+                    </li>
+                    <li id="account-button" class="hidden">
+                        <button class="nav-button" onclick="showSection('account')"><i class="fas fa-user-circle"></i> Аккаунт</button>
+                    </li>
                 </ul>
                 <!-- Кнопка для мобильного меню -->
                 <div class="hamburger" onclick="toggleMobileMenu()">
                     <i class="fas fa-bars"></i>
                 </div>
             </nav>
+            <!-- Переключатель темы -->
+            <div class="theme-toggle">
+                <input type="checkbox" id="theme-switch" />
+                <label for="theme-switch" class="toggle-label">
+                    <span class="toggle-ball"></span>
+                </label>
+            </div>
         </div>
     </header>
 
@@ -46,7 +57,7 @@
             <div class="hero">
                 <div class="hero-content">
                     <h2>Добро пожаловать в Travel Explorer!</h2>
-                    <p>Исследуйте лучшие маршруты по всему миру.</p>
+                    <p>Travel Explorer — ваш надежный помощник в планировании и создании уникальных маршрутов для путешествий. Исследуйте, делитесь и сохраняйте лучшие маршруты по всему миру.</p>
                     <button onclick="showSection('routes')"><i class="fas fa-search-location"></i> Начать исследование</button>
                 </div>
             </div>
@@ -100,8 +111,8 @@
                 <div class="form-group">
                     <label for="route-transport"><i class="fas fa-bus"></i> Тип транспорта:</label>
                     <select id="route-transport" name="route-transport">
-                        <option value="foot">Пешком</option>
-                        <option value="car">На машине</option>
+                        <option value="auto">На машине</option>
+                        <option value="pedestrian">Пешком</option>
                         <option value="bicycle">На велосипеде</option>
                     </select>
                 </div>
@@ -118,11 +129,34 @@
                             <input type="text" name="street-1" placeholder="Улица 1" required>
                             <button type="button" class="remove-street-button"><i class="fas fa-trash-alt"></i></button>
                         </div>
+                        <div class="street-item">
+                            <input type="text" name="street-2" placeholder="Улица 2" required>
+                            <button type="button" class="remove-street-button"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                        <div class="street-item">
+                            <input type="text" name="street-3" placeholder="Улица 3" required>
+                            <button type="button" class="remove-street-button"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                        <div class="street-item">
+                            <input type="text" name="street-4" placeholder="Улица 4" required>
+                            <button type="button" class="remove-street-button"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                        <div class="street-item">
+                            <input type="text" name="street-5" placeholder="Улица 5" required>
+                            <button type="button" class="remove-street-button"><i class="fas fa-trash-alt"></i></button>
+                        </div>
                     </div>
                     <button type="button" id="add-street-button"><i class="fas fa-plus-circle"></i> Добавить улицу</button>
                 </div>
 
-                <div id="map"></div>
+                <div class="form-group">
+                    <label><i class="fas fa-images"></i> Изображения маршрута:</label>
+                    <input type="file" id="route-images" name="route-images" accept="image/*" multiple required>
+                    <div id="image-preview" class="image-preview"></div>
+                </div>
+
+                <!-- Добавление карты для создания маршрута -->
+                <div id="create-map" class="map-container"></div>
 
                 <button type="button" onclick="addRoute()"><i class="fas fa-plus"></i> Добавить маршрут</button>
             </form>
@@ -182,211 +216,36 @@
                 <button onclick="logout()"><i class="fas fa-sign-out-alt"></i> Выйти</button>
             </div>
         </section>
+
+        <!-- Модальное окно для детального просмотра маршрута -->
+        <div id="route-modal" class="modal hidden">
+            <div class="modal-content">
+                <span class="close-button" onclick="closeModal()">&times;</span>
+                <h2 id="modal-route-name">Название маршрута</h2>
+                <p><strong>Город:</strong> <span id="modal-city">Город</span></p>
+                <p><strong>Тип:</strong> <span id="modal-type">Тип</span></p>
+                <p><strong>Описание:</strong> <span id="modal-description">Описание маршрута</span></p>
+                <p><strong>Улицы:</strong> <span id="modal-streets">Улицы</span></p>
+                <div id="estimated-time" class="estimated-time">Оценка времени: <span id="modal-time">Расчитывается...</span></div>
+                <div class="modal-images" id="modal-images"></div>
+                <div id="modal-map" class="modal-map"></div>
+            </div>
+        </div>
+
+        <!-- Lightbox для полноэкранного просмотра изображений -->
+        <div id="lightbox" class="lightbox hidden">
+            <span class="close-lightbox">&times;</span>
+            <img class="lightbox-content" id="lightbox-img">
+            <div id="lightbox-caption"></div>
+        </div>
     </main>
 
     <footer>
-        <p>&copy; 2024 Travel Explorer. Все права защищены.</p>
+        <p>&copy; 2025 Travel Explorer.</p>
         <div class="social-icons">
-            <a href="#"><i class="fab fa-facebook-f"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-twitter"></i></a>
         </div>
     </footer>
 
-    <script>
-        // JavaScript для мобильного меню
-        function toggleMobileMenu() {
-            const navLinks = document.querySelector('.nav-links');
-            navLinks.classList.toggle('active');
-        }
-
-        let viewedRoutes = []; 
-        let addedRoutes = [];
-
-        function showSection(sectionId) {
-            const sections = document.querySelectorAll('main section');
-            sections.forEach(section => section.classList.add('hidden'));
-            document.getElementById(sectionId).classList.remove('hidden');
-            // Закрытие мобильного меню после выбора
-            const navLinks = document.querySelector('.nav-links');
-            if (navLinks.classList.contains('active')) {
-                navLinks.classList.remove('active');
-            }
-        }
-
-        // Обработка динамического добавления/удаления улиц
-        document.getElementById('add-street-button').addEventListener('click', function() {
-            const streetsList = document.getElementById('streets-list');
-            const streetItem = document.createElement('div');
-            streetItem.className = 'street-item';
-
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.name = `street-${streetsList.children.length + 1}`;
-            input.placeholder = `Улица ${streetsList.children.length + 1}`;
-            input.required = true;
-
-            const removeButton = document.createElement('button');
-            removeButton.type = 'button';
-            removeButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
-            removeButton.classList.add('remove-street-button');
-            removeButton.addEventListener('click', function() {
-                streetsList.removeChild(streetItem);
-            });
-
-            streetItem.appendChild(input);
-            streetItem.appendChild(removeButton);
-            streetsList.appendChild(streetItem);
-        });
-
-        // Регистрация пользователя
-        function registerUser() {
-            const username = document.getElementById('register-username').value;
-            const email = document.getElementById('register-email').value;
-            const password = document.getElementById('register-password').value;
-            console.log('Пользователь зарегистрирован:', { username, email, password });
-            alert('Регистрация прошла успешно!');
-            showSection('home');
-        }
-
-        // Вход пользователя
-        function loginUser(event) {
-            event.preventDefault();
-            const username = document.getElementById('login-username').value;
-            const password = document.getElementById('login-password').value;
-            console.log('Пользователь вошел:', { username, password });
-            alert('Вход выполнен успешно!');
-            document.getElementById('account-name').textContent = username;
-            document.getElementById('account-email').textContent = 'example@example.com'; // Здесь можно добавить реальный email
-            showSection('account');
-        }
-
-        // Подписка
-        function subscribe() {
-            alert('Подписка оформлена!');
-            document.getElementById('subscription-status').textContent = 'Оформлена';
-        }
-
-        // Выход из аккаунта
-        function logout() {
-            alert('Вы вышли из системы');
-            document.getElementById('account-name').textContent = 'Не зарегистрирован';
-            document.getElementById('account-email').textContent = 'Не зарегистрирован';
-            document.getElementById('subscription-status').textContent = 'Не оформлена';
-            showSection('home');
-        }
-
-        // Добавление маршрута
-        function addRoute() {
-            const city = document.getElementById('city').value;
-            const routeName = document.getElementById('route-name').value;
-            const routeType = document.getElementById('route-type').value;
-            const routeTransport = document.getElementById('route-transport').value;
-            const routeDescription = document.getElementById('route-description').value;
-            const streets = Array.from(document.querySelectorAll('input[name^="street-"]')).map(input => input.value);
-
-            const newRoute = { city, routeName, routeType, routeTransport, routeDescription, streets };
-            addedRoutes.push(newRoute);
-            console.log('Маршрут добавлен:', newRoute);
-            alert('Маршрут успешно добавлен!');
-            showSection('routes');
-            loadRoutes('all');
-        }
-
-        // Инициализация Яндекс.Карт
-        ymaps.ready(function () {
-            var myMap = new ymaps.Map("map", {
-                center: [55.76, 37.64],
-                zoom: 10
-            });
-        });
-
-        // Обработка вкладок маршрутов
-        const routes = {
-            recommended: [
-                { name: "Маршрут 1", description: "Описание маршрута 1" },
-                { name: "Маршрут 2", description: "Описание маршрута 2" },
-            ],
-            new: [
-                { name: "Маршрут 3", description: "Описание маршрута 3" },
-            ],
-            popular: [
-                { name: "Маршрут 5", description: "Описание маршрута 5" },
-            ],
-            all: [
-                { name: "Маршрут 1", description: "Описание маршрута 1" },
-                { name: "Маршрут 2", description: "Описание маршрута 2" },
-                { name: "Маршрут 3", description: "Описание маршрута 3" },
-                { name: "Маршрут 4", description: "Описание маршрута 4" },
-                { name: "Маршрут 5", description: "Описание маршрута 5" },
-                { name: "Маршрут 6", description: "Описание маршрута 6" },
-            ],
-        };
-
-        function loadRoutes(category) {
-            const tabs = document.querySelectorAll('.tab-button');
-            tabs.forEach(tab => tab.classList.remove('active'));
-            document.querySelector(`.tab-button[data-tab="${category}"]`).classList.add('active');
-
-            const tabContents = document.querySelectorAll('.tab');
-            tabContents.forEach(tabContent => tabContent.classList.remove('active'));
-            document.getElementById(category).classList.add('active');
-
-            let content = routes[category].map(route => {
-                return `<div class="card">
-                            <h3>${route.name}</h3>
-                            <p>${route.description}</p>
-                        </div>`;
-            }).join('');
-
-            // Добавление пользовательских маршрутов в раздел "Все"
-            if (category === 'all') {
-                addedRoutes.forEach(route => {
-                    content += `<div class="card">
-                                <h3>${route.routeName}</h3>
-                                <p><strong>Город:</strong> ${route.city}</p>
-                                <p><strong>Тип:</strong> ${route.routeType}</p>
-                                <p>${route.routeDescription}</p>
-                                <p><strong>Улицы:</strong> ${route.streets.join(', ')}</p>
-                            </div>`;
-                });
-            }
-
-            document.getElementById(category).innerHTML = content;
-        }
-
-        // Инициализация маршрутов
-        loadRoutes('recommended');
-
-        // Обновление рекомендаций
-        function updateRecommendations() {
-            const recommendedRoutes = document.getElementById('recommended');
-            recommendedRoutes.innerHTML = '';
-
-            if (addedRoutes.length === 0) {
-                recommendedRoutes.innerHTML = '<p>Нет рекомендаций. Добавьте свой маршрут!</p>';
-                return;
-            }
-
-            const latestRoute = addedRoutes[addedRoutes.length - 1];
-            const recommended = addedRoutes.filter(route => route.routeType === latestRoute.routeType);
-
-            recommended.forEach(route => {
-                const routeElement = document.createElement('div');
-                routeElement.classList.add('card');
-                routeElement.innerHTML = `
-                    <h4>${route.routeName}</h4>
-                    <p><strong>Город:</strong> ${route.city}</p>
-                    <p><strong>Тип:</strong> ${route.routeType} маршрут</p>
-                    <p>${route.routeDescription}</p>
-                    <p><strong>Улицы:</strong> ${route.streets.join(', ')}</p>
-                `;
-                recommendedRoutes.appendChild(routeElement);
-            });
-        }
-
-        // Обновляем рекомендации при загрузке страницы
-        window.onload = updateRecommendations;
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
